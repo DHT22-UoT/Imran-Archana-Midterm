@@ -1,4 +1,5 @@
-# DETERMING WHAT CORRELATIONS OF WEATHER
+# DETERMING WHAT CORRELATIONS OF WEATHER NETRUDCS ABD TRIP DURATION ARE
+
 library(dplyr)
 library(lubridate)
 library(corrplot)
@@ -46,17 +47,17 @@ wt_events <- wt_joined %>%
   # Should not use weather events as there are naturally more days with no events, and cities follow the same ratio
   
 # Create a new data set only containing the numerical weather measurements
-wt_numerical <- dplyr::select(weather,c(max_temperature_f:cloud_cover))
+wt_numerical <- dplyr::select(wt_joined,c(duration, max_temperature_f:cloud_cover))
 
 # Create correlation plot
 wt_corr <- cor(wt_numerical, use = "complete.obs")
 
 # Rename columns and rows for plot
-colnames(wt_corr) <- c("Max Temperature (F)", "Mean Temperature (F)", "Min Temperature (F)"
+colnames(wt_corr) <- c("Duration","Max Temperature (F)", "Mean Temperature (F)", "Min Temperature (F)"
                   , "Max Visibility (miles)", "Mean Visibility (miles)", "Min Visibility (miles)",
                   "Max Wind Speed (mph)", "Mean Wind Speed (mph)", "Max Gust Speed (mph)",
                   "Precipitation (inches)", "Cloud Cover")
-rownames(wt_corr) <- c("Max Temperature (F)", "Mean Temperature (F)", "Min Temperature (F)"
+rownames(wt_corr) <- c("Duration", "Max Temperature (F)", "Mean Temperature (F)", "Min Temperature (F)"
                        , "Max Visibility (miles)", "Mean Visibility (miles)", "Min Visibility (miles)",
                        "Max Wind Speed (mph)", "Mean Wind Speed (mph)", "Max Gust Speed (mph)",
                        "Precipitation (inches)", "Cloud Cover")
