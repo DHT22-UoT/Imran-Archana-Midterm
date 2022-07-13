@@ -1,3 +1,6 @@
+
+***NOTE:*** due to improper management of version control, excess commits involving deletion files are present
+
 # Files
 
 **station.csv**; Contains data that represents a station where users can pick up or return bikes.
@@ -11,25 +14,37 @@
 - Conduct an EDA on Trip dataset
 - **main files:** trip-eda.R
   - Produces plots and summaries of data
- 
 
-•	Any trip with duration less than 2 minutes is likely a 'cancelled trip'. Find out the number of such trips, record the information for your report and then remove them from the dataset.
-  -Archana
+## weather-EDA (Imran)
+- Conduct an EDA on Trip dataset
+- **main files:** weather-eda.R
+  - Produces plots and summaries of data
+  - Produces weather_processed.rds that contains adjustments to events, precipitation inches, and zip code variables
 
-•	Identify the outliers in the dataset (you have to decide which table/column), record them for your final report and then remove from the dataset.
-  -Archana
+## cancelled_trips (Archana)
+- Remove trips with duration less than 2 minutes
+- **main files:** cancelled_trips.R
+  - Produces trips_2minutes.RDS that contains trips that are exclusively longer than 2 minutes
 
-•	The data science team needs you to establish the highest volume hours on weekdays, so that they can build 'rush hours' into their model (lubridate package is your BFF here). You can choose what approach to take, but you have to find the hours of weekdays where the trip volume is highest. (e.g. you may try histograms)
-  -Imran
+## outliers (Archana)
+- Identifies and removes outliers
+- **main files:** Outliers.R
+  - Produces trips_no_outliers.rds that contains trip data with no outliers
+  - Produces weather_no_outliers.rds that contains weather data with no outliers
 
-•	Determine the 10 most frequent starting stations and ending stations during the rush hours you established.
-  -Imran
+## rush-hour (Imran)
+- Determines highest volume rush hours on weekdays
+- Determines 10 most frequent starting stations and ending stations during the rush hours
+- Determines 10 most frequent starting stations and ending stations during the weekends
+- **main files:** rush_hours.R
 
-•	Determine the 10 most frequent starting stations and ending stations during the weekends.
-  -Imran
+## avg_utilization (Archana)
+- Determines the average utilization of bikes for each month (total time used/total time in month)
+- **main files:** avg_utilization.R
 
-•	Calculate the average utilization of bikes for each month (total time used/total time in month).
-  -Archana
+## weather-conditions (Imran)
+- Visualizes correlation between distance of bike rides and different weather metrics
+- **main_files:** trip_weather_joined.R
+  - Joins trip to station using station IDs as join condition
+  - Joins weather to trip+station using date and city as join condition
 
-•	The team assumes that weather conditions probably have an impact on the bike rental patterns, but they are not sure whether they should use temperature, weather events, visibility or other weather measurements available. Help them decide by creating a new dataset combining trip data with the weather data. (Note that the weather data is available for each city and date. Join your datasets accordingly). Create a correlation matrix for the new dataset using the cor() function from the corrplot package. Flag the highest correlations for the data science team.
-  -Imran
