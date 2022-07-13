@@ -71,10 +71,10 @@ ms_proportion <- sum(morning_starting)/nrow(trips)
 barplot(morning_starting, 
         main = "Ten Busiest Starting Stations During Morning Rush Hour",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
+        cex.lab = 1.2,
         cex.axis = 1,
-        cex.names = 0.6,
-        ylim = c(0,6500),
+        cex.names = 1.2,
+        ylim = c(0,7000),
         las = 2)
 
 # Create a table containing the 10 busiest ending station in order
@@ -88,10 +88,10 @@ me_proportion <- sum(morning_ending)/nrow(trips)
 barplot(morning_ending, 
         main = "Ten Busiest Ending Stations During Morning Rush Hour",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
-        cex.axis = 1.2,
+        cex.lab = 1.2,
+        cex.axis = 1.0,
         cex.names = 1.2,
-        ylim = c(0,3500),
+        ylim = c(0,7000),
         las = 2)
 
 # Create a new dataframe with only the trips during the evening rush hour
@@ -108,10 +108,11 @@ es_proportion <- sum(evening_starting)/nrow(trips)
 barplot(evening_starting, 
         main = "Ten Busiest Starting Stations During Evening Rush Hour",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
-        cex.axis = 1.2,
+        xlab = "Station ID",
+        cex.lab = 1.2,
+        cex.axis = 1.0,
         cex.names = 1.2,
-        ylim = c(0,2000),
+        ylim = c(0,7000),
         las = 2)
 
 # Create a table containing the 10 busiest ending station in order
@@ -125,8 +126,9 @@ ee_proportion <- sum(evening_ending)/nrow(trips)
 barplot(evening_ending, 
         main = "Ten Busiest Ending Stations During Evening Rush Hour",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
-        cex.axis = 1.2,
+        xlab = "Station ID",
+        cex.lab = 1.2,
+        cex.axis = 1.0,
         cex.names = 1.2,
         ylim = c(0,7000),
         las = 2)
@@ -147,8 +149,9 @@ ws_proportion <- sum(weekend_starting)/nrow(trips)
 barplot(weekend_starting, 
         main = "Ten Busiest Starting Stations During Weekends",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
-        cex.axis = 1.2,
+        xlab = "Station ID",
+        cex.lab = 1.2,
+        cex.axis = 1.0,
         cex.names = 1.2,
         ylim = c(0,2500),
         las = 2)
@@ -164,8 +167,9 @@ ws_proportion <- sum(weekend_starting)/nrow(trips)
 barplot(weekend_ending, 
         main = "Ten Busiest Ending Stations During Weekends",
         ylab = "Number of Trips",
-        cex.lab = 1.3,
-        cex.axis = 1.2,
+        xlab = "Station ID",
+        cex.lab = 1.2,
+        cex.axis = 1.0,
         cex.names = 1.2,
         ylim = c(0,2500),
         las = 2)
