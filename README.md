@@ -7,11 +7,11 @@
 **weather.csv**; Data about the weather on a specific day for certain zip codes/cities.
 
 # Tasks:
--Conduct and EDA on Trip and Weather Data; follow setps in EDA blog post
+- Conduct and EDA on Trip and Weather Data; follow setps in EDA blog post
 
-  -Trip EDA: Archana
+  - Trip EDA: Archana
   
-  -Weather EDA: Imran
+  - Weather EDA: Imran
 
 •	Any trip with duration less than 2 minutes is likely a 'cancelled trip'. Find out the number of such trips, record the information for your report and then remove them from the dataset.
   -Archana
