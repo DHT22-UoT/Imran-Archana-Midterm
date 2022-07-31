@@ -1,0 +1,170 @@
+---
+title: 'Assignment 5: Refine Your Midterm'
+author: "Archana"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Weather Data EDA 
+
+library(funModeling)
+library(tidyverse)
+library(Hmisc)
+library(stringr)
+library(dplyr)
+
+# Import weather dataset as a dataframe
+weather_data <- read.csv("weather.csv", header = TRUE, sep = ",")
+
+# Head the first observations and view the total number of observations and variables
+glimpse(weather_data)
+  # 1825 total observations
+  # 15 variables
+  # Data is in imperial measurements (F, miles, mph, inches)
+
+# Replace T values in precipitation_inches with 0 and convert to numeric
+weather_data$precipitation_inches <- stringr::str_replace(weather_data$precipitation_inches, "T", "0")
+weather_data <- weather_data %>% mutate(precipitation_inches = as.numeric(precipitation_inches))
+
+# Replace empty values with "No Event" in events
+weather_data$events[weather_data$events == ""] <- "No Event"
+weather_data$events[weather_data$events == "rain" | weather_data$events == "Rain-Thunderstorm"] <- "Rain"
+
+# Convert zip_code to character 
+weather_data$zip_code <- as.character(weather_data$zip_code)
+
+# Gain metrics on data types, zeroes, infinite numbers, and missing values
+print(status(weather_data))
+  # 451 missing values in max_gust_speed_mph
+  # 1543 0s in precipitation_inches (no precipitation on that day), will skew histograms heavily
+  # Variables to turn into factors: cloud_cover, events, city
+  # Variables of interest: precipitation_inches (contains T and integer values)
+  # zip_code has as many unique values as city (zipcode is not unique)
+
+# Analyze categorical variables
+freq(weather_data) 
+  # Equal distribution entires for all 5 cities
+  # 1473 NULL values in events variable
+  # precipitation_inches is treated as a categorical variable due to T 
+
+  #Export frequency plots to current directory
+  freq(weather_data, path_out = ".")
+     
+print(profiling_num(weather_data))
+  # Right skew: max_wind_speed_mph, max_gust_speed_mph (also have high st dev)
+  # wind speed descriptor variables have high variation_ceof
+
+plot_num(weather_data)
+  # max_temp_f -> unimodal with potentially some outliers
+  # mean_temp_f -> unimodal
+  # min_temp_f -> unimodal
+  # max_visibility_miles -> one large peak, will have high std dev
+  # mean_visibility miles -> one large peak, but balanced on either side
+  # min_visibility_miles -> left skew, outliers present 15+
+  # max_wind_speed_mph -> outliers present, towards 120
+  # mean_wind_speed -> slight right skew, potential outliers towards 20
+  # max_gust_speed_mph -> right skew, definitely has outliers towards 90
+  # cloud_cover -> should be treated as factor, but well distributed
+  # zip_code -> being treated as numerical, should convert to a factor
+  #Export numerical plots to current directory
+  plot_num(weather_data, path_out = ".")
+
+describe(weather_data)
+  # Consistent observations with above
+
+saveRDS(weather_data, "weather_processed.rds")
+
+“T” values representing trace amounts of precipitation within the precipitation_inches variable were converted to 0 and the variable was converted to numerical. “rain” was converted to “Rain” in the events variable to properly group the variable. The variable zip_code was converted to a factor as there were only 5 zip codes, one for each of the cities described in the dataset.
+
+Within the weather dataset there are a total of 1825 observations and 15 variables.5 (0.27%) observations for each date were present in the data set and range from 1/1/2014 to 6/15/2014. In the city variable there are 365 (20%) observations from Mountain View, 365 (20%) observations from Palo Alto, 365 (20%) observations from Redwood City, 365 (20%) observations from San Francisco, and 365 (20%) observations from San Jose (Figure 1). Similarly, the zip codes within the zip_codes variable are general and represent each of the regions. 365 (20%) observations were present for 94041 (Mountain View), 365 (20%) observations for 94301 (Palo Alto), 365 (20%) observations for 94063 (Redwood City), 365 (20%) observations for 94107 (San Francisco), and 365 (20%) observations for 95113  (San Jose) (Figure 2) Of these dates, 1473 (80.71%) were recorded as undergoing no weather event across all cities, 282 (15.45%) were noted to experience rain, 57 (3.12%) had fog documented across all cities, and 13 (0.71%) had both fog and rain.
+
+Within the numerical variables, 1616 (88.55%) of observations for precipitation_inches were zero. 451 observations for maximum gust speed were missing (24.71%), thus maximum gust speed had less than 80% of all values as non-NA values.  The mean of maximum temperature was 71.03 with a standard deviation (SD) of 8.26. The mean of mean temperature was 62.04 with an SD of 6.75. The mean of minimum temperature was 52.83 with an SD of 6.67.  The mean of max visibility was 10.86 with an SD of 2.62.  The mean of mean visibility was 9.97 with an SD of 1.62. The mean of minimum visibility was 8.11 with an SD of 3.04.  The mean of maximum wind speed 16.43 was with an SD of 7.32.  The mean of mean wind speed was 6.11 with an SD of 3.05. The mean of maximum wind speed was 22.69 with an SD of 9.09. Precipitation had an extremely high variation of coefficient of 5.97 and broad 98-percentile range of 9-45.81, indicating the presence of outliers. The mean precipitation was 0.03 with an SD of 0.18 as well. The variable describing cloud cover had a mean of 3, with an SD of 2.30. Representative histograms can be found in Figure 4.
+
+![**Figure 1.** Barplot of categorical variable citywithin the weather dataset](city.jpeg)
+![**Figure 2.** Barplot of categorical variable zipcode within the weather dataset](zip_code.jpeg)
+
+![**Figure 3.** Barplot of categorical variable events within the weather dataset](events.jpeg)
+
+![**Figure 4.** Representative  histograms of numerical variables max_temperature_f, mean_temperature_f, min_temperature_f, max_visibility_miles, mean_visibility_miles, min_visibility_miles, max_wind_Speed_mph, mean_wind_speed_mph, max_gust_speed_mph, max_gust_speed_mph, precipitation_inches, cloud_cover.](histograms.png)
+
+## Trip Data EDA 
+
+# load packages
+library(funModeling) 
+library(tidyverse) 
+library(Hmisc)
+
+# import the trip dataset as a datafram 
+trip_data <- read.csv("trip.csv")
+
+# setup basic_eda function 
+
+trip_eda <- function(trip_data)
+{
+  glimpse(trip_data) 
+  # 326,339 obs
+  # 11 variables
+          
+  print(status(trip_data))
+  # 50 0s in zip_code
+  # variables to turn into factors: start_station_name, end_station_name, 
+  # variables of interest: duration, start_date, start_station_name, end_date, end_station_name, 
+  
+  freq(trip_data)
+  # ~85% subscriber
+  # ~15% customer
+  
+  # export plots
+  freq(trip_data, path_out = ".")
+  
+  
+  print(profiling_num(trip_data))
+  # right skew: duration (also high variation ceof, and std dev)
+  
+  plot_num(trip_data)
+  # duration: one large peak
+  # start_station_id: left skewed 
+  # end_station_id: left skewed 
+  # bike_id: unimodal, may have outliers
+  
+  #export plots
+  plot_num(trip_data, path_out = ".")
+  
+  describe(trip_data)
+  # 1493 missing zip_code
+}
+
+# run the above function for trip_data
+trip_eda(trip_data)
+
+The trip dataset contained 326,339 trip observations of 11 variables from 01/01/2014 to 09/09/2014. Within the 11 variables there was one numerical variable, duration, the rest of the variables were categorical: id, start station id, end station id, bike id, start date, start station name, end date, end station name, subscription type, and zip code. The zipcode variable contains a total of 50 observations that were recorded as 0’s and can be interpreted as NAs; all other data was complete. 
+
+There was an average trip duration in seconds was ~1132 seconds. The duration data is also skewed to the right, has a high variance (27), and high standard deviation (30816). Out of the 74 different stations, San Francisco Caltrain (Townsend at 4th), had the highest frequency with 25144 (7.7%) start station observations (Figure 5) and 33213 (10.18%) end station observations (Figure 6).  Figure 7 displays the frequency of trips that were made by subscribers and customers. It was found that ~85% (277763 observations) of the trips from this data set were from subscribers and the other ~15% (48576 observations) of the trips were from the customers.
+
+![**Figure 5.** Barplot of categorical variable start station name within the trip dataset.](start_station_name.jpeg)
+![**Figure 6.** Barplot of categorical variable end station name within the trip dataset.](end_station_name.jpeg)
+![**Figure 7.** Bar plot of categorical variable subscription type within the trip dataset. ](subscription_type.jpeg)
+
+## Cancelled Trips
+
+load("dplyr")
+
+# Any trip with duration less than 2 minutes is likely a 'cancelled trip'. 
+# Find out the number of such trips, record the information for your report and 
+# then remove them from the dataset
+
+# find the trips with duration less than 2 minutes
+trip_data_cancelled <- filter(trip_data, trip_data$duration < 120)
+
+# remove cancelled trips from data set 
+trip_data2 <- trip_data %>%
+  filter(trip_data$duration >= 120)
+
+
+saveRDS(trip_data2, "trip_data2.rds")
+
+Within the trip dataset cancelled trips were identified to be trips with duration less than 2 minutes. It was found that there was a total of 2499 cancelled trips within this dataset, these observations are stored in the trip_data_cancelled dataframe and removed from the original dataset. 
