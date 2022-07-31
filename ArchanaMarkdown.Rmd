@@ -168,3 +168,164 @@ trip_data2 <- trip_data %>%
 saveRDS(trip_data2, "trip_data2.rds")
 
 Within the trip dataset cancelled trips were identified to be trips with duration less than 2 minutes. It was found that there was a total of 2499 cancelled trips within this dataset, these observations are stored in the trip_data_cancelled dataframe and removed from the original dataset. 
+
+## Trip Data Outliers 
+
+trip_data2 <- readRDS("trips_2minutes.RDS")
+
+# create a dataframe to store trip data outliers
+trip_outliers <- data.frame()
+
+# create a box plot for the trip data for numeric variables
+# box plot for duration
+boxplot(trip_data2$duration) # outliers present
+# find the outliers in duration
+duration_outliers <- boxplot.stats(trip_data2$duration)$out
+# find row numbers for duration outliers
+duration_outliers_rownum <- which(trip_data2$duration %in% c(duration_outliers))
+duration_outrows <- trip_data2[duration_outliers_rownum,]
+# add the outliers to the trip outliers_dataset
+trip_outliers<- rbind(trip_outliers, duration_outrows)
+# remove outliers from trip_data2 and store in new dataset
+trip_data3 <- trip_data2[-duration_outliers_rownum,]
+
+saveRDS(trip_data3, "trip_no_outliers.rds")
+
+The outliers for the trip and weather dataset were evaluated by constructing box plots for each numerical variable and using the boxplot.stats( ) function in R to identify the outliers. The function essentially looks for values of the datapoints which lie beyond the extremes of the whiskers of the boxplot. There were a total of 24927 outliers in the trip dataset this data is stored in the trip_outliers dataframe, and all outliers were extracted from the duration variable. The cleaned trip dataset is stored in the trip_no_outliers dataset. 
+
+## Weather Data Outliers 
+
+weather_data <- readRDS("weather_processed.rds")
+
+# create a dataframe from store weather data outliers 
+weather_outliers <- data.frame()
+weather_data2 <- weather_data
+
+# go through every coloumn and print it out
+# for(i in 2:10) {
+#   print(names(weather_data)[i])
+#   # create a box plot for the weather data for numeric variables
+#   boxplot(weather_data[ , i])
+#   column_outliers <- boxplot.stats(weather_data2[,i])$out
+#   print(column_outliers)
+#   # find row numbers for mean_temperature_f outliers
+#   column_outliers_rownum <- which(weather_data2[,i] %in% c(column_outliers))
+#   print(column_outliers_rownum)
+#   column_outrows <- weather_data2[column_outliers_rownum,]
+#   # add the outliers to the weather_outliers dataset if not already present
+#   weather_outliers<- rbind(weather_outliers, column_outrows)
+#   # remove outliers from weather_data and store in new dataset
+#   weather_data2 <- weather_data2[-column_outliers_rownum,]
+# }
+
+# create a box plot for the weather data for numeric variables
+# box plot for mean_temperature_f
+boxplot(weather_data$mean_temperature_f) # no outliers present
+
+# box plot for min_temperature_f
+boxplot(weather_data$min_temperature_f) # outliers present
+# find the outliers in min_temperature_f
+mintemp_outliers <- boxplot.stats(weather_data$min_temperature_f)$out
+print(mintemp_outliers)
+# find row numbers for min_temperature_f outliers
+mintemp_outliers_rownum <- which(weather_data$min_temperature_f %in% c(mintemp_outliers))
+mintemp_outrows <- weather_data[mintemp_outliers_rownum,]
+# add the outliers to the weather_outliers dataset
+weather_outliers<- rbind(weather_outliers, mintemp_outrows)
+# remove outliers from weather_data and store in new dataset
+weather_data <- weather_data[-mintemp_outliers_rownum,]
+
+# box plot for max_temperature_f
+boxplot(weather_data$max_temperature_f) # outliers present
+# find the outliers in max_termperature_f
+maxtemp_outliers <- boxplot.stats(weather_data$max_temperature_f)$out
+# find row numbers for max_termperature_f outliers
+maxtemp_outliers_rownum <- which(weather_data$max_temperature_f %in% c(maxtemp_outliers))
+maxtemp_outrows <- weather_data[maxtemp_outliers_rownum,]
+# add the outliers to the weather_outliers dataset
+weather_outliers<- rbind(weather_outliers, maxtemp_outrows)
+# remove outliers from weather_data and store in new dataset
+weather_data <- weather_data[-maxtemp_outliers_rownum,]
+
+# box plot for mean_visibility_miles
+boxplot(weather_data$mean_visibility_miles) # outliers present, but IQR is 0, ignore
+
+# box plot for min_visibility_miles
+boxplot(weather_data$min_visibility_miles) # outliers present, but distribution is one sided, ignore
+
+# box plot for max_visibility_miles
+boxplot(weather_data$max_visibility_miles) # outliers present, but IQR is 0, ignore
+
+# box plot for mean_wind_speed_mph
+boxplot(weather_data$mean_wind_speed_mph) # outliers present
+# find the outliers in mean_wind_speed_mph
+mean_wind_outliers <- boxplot.stats(weather_data$mean_wind_speed_mph)$out
+# find row numbers for mean_wind_speed_mph outliers
+mean_wind_outliers_rownum <- which(weather_data$mean_wind_speed_mph %in% c(mean_wind_outliers))
+mean_wind_outrows <- weather_data[mean_wind_outliers_rownum,]
+# add the outliers to the weather_outliers dataset
+weather_outliers<- rbind(weather_outliers, mean_wind_outrows)
+# remove outliers from weather_data and store rows without outliers in new dataframe
+weather_data <- weather_data[-mean_wind_outliers_rownum,]
+
+# box plot for max_wind_speed_mph
+boxplot(weather_data$max_wind_Speed_mph) # outliers present
+# find the outliers in max_wind_speed_mph
+max_wind_outliers <- boxplot.stats(weather_data$max_wind_Speed_mph)$out
+# find row numbers for max_wind_speed_mph outliers
+max_wind_outliers_rownum <- which(weather_data$max_wind_Speed_mph %in% c(max_wind_outliers))
+max_wind_outrows <- weather_data[max_wind_outliers_rownum,]
+# add the outliers to the weather_outliers dataset
+weather_outliers<- rbind(weather_outliers, max_wind_outrows)
+# remove outliers from weather_data and store rows without outliers in new dataframe
+weather_data <- weather_data[-max_wind_outliers_rownum,]
+
+# box plot for max_gust_speed_mph
+boxplot(weather_data$max_gust_speed_mph) # outliers present
+# find the outliers in max_gust_speed_mph
+max_gust_outliers <- boxplot.stats(weather_data$max_gust_speed_mph)$out
+# find row numbers for max_gust_speed_mph outliers
+max_gust_outliers_rownum <- which(weather_data$max_gust_speed_mph %in% c(max_gust_outliers))
+max_gust_outrows <- weather_data[max_gust_outliers_rownum,]
+# add the outliers to the weather_outliers dataset
+weather_outliers<- rbind(weather_outliers, max_gust_outrows)
+# remove outliers from weather_data and store rows without outliers in new dataframe
+weather_data <- weather_data[-max_gust_outliers_rownum,]
+
+# box plot for precipitation_inches
+boxplot(weather_data$precipitation_inches) # heavily skewed
+#Apply log transformation
+log_precip <- log(weather_data$precipitation_inches)
+hist(log_precip)
+
+saveRDS(weather_data, "weather_no_outliers.rds")
+
+There were a total of 80 outliers in the weather dataset and are stored in the weather_no_outliers dataset. Outliers were evaluated for the following variables within weather dataset: mean temperature, minimum temperature, maximum temperature, mean visibility, minimum visibility, maximum visibility, mean windspeed, maximum wind speed, maximum gust speed, and precipitation. Mean temperature did not contain any outliers. Minimum visibility contained outliers however the distribution was onesided and thus the outliers were removed. The boxplot for precipitation also showed the data too be heavily and the outliers were ignored for this variable as well. Both mean and minimum visibility had outliers with an IQR of 0 so the outliers were ignored for these variables. The minimum and maximum temperature variables each had one outlier that is stored in the mintemp_outrows and maxtemp_outrows dataframes respectively. Mean wind had 19 outliers that are stored in mean_wind_outrows, maximum wind had 14 outliers that are stored in max_wind_outrows, and maximum gust had 44 outliers that are stored in max_gust_outrows. The cleaned weather dataset is stored in the weather_data dataset. 
+
+## Rush Hour on Weedays 
+
+Histograms indicated that the busiest hours of each weekday individually were 8 AM and 5 PM based on number of trips beginning during these hours (Figure 8). A combined histogram including trips from all weekdays corroborated this result (Figure 9). A total of 39 744 (14.77%) trips began between 8:00 and 9:00 AM. 35 738 (13.27%) trips began between 5:00 and 6:00 PM.
+
+![**Figure 8.** Histograms of the number of starting trips per hour for individual weekdays. ](NumberofTrips.png)
+![**Figure 9.** Histogram of the number of starting trips per hour for all weekdays combined. ](NumberofWeekdayTrips.png)
+
+## Busiest Stations During Rush Hours and Weekends
+
+During the morning rush hour (8 AM) on weekdays, the ten busiest starting stations in descending order were San Francisco Caltrain (Townsend at 4th) (ID: 70), Harry Bridges Plaza (Ferry Building) (ID: 50), San Francisco Caltrain 2 (330 Townsend) (ID: 69), Temporary Transbay Terminal (Howard at Beale) (ID: 55), Steuart at Market (ID: 74), Grant Avenue at Columbus Avenue (ID: 73), 2nd at Townsend (ID: 61), Embarcadero at Bryant (ID: 54), Civic Center BART (7th at Market) (ID: 72), and South Van Ness at Market (ID: 66) (Figure 10A).  Trips starting at these stations during this time represented 8.03% of all trips in the dataset.
+
+During the morning rush hour (8 AM) on weekdays, the ten busiest ending stations in descending order were San Francisco Caltrain (Townsend at 4th) (ID: 70), 2nd at Townsend (ID: 61), Townsend at 7th (ID: 65), Market at Sansome (ID: 77), Embarcadero at Sansome (ID: 60), 2nd at South Park (ID: 64),  San Francisco Clatrain 2 (330 Townsend) (ID: 69), Howard at 2nd (ID: 63), Embarcadero at Folsom (ID: 51), and Steuart at Market (ID: 74) (Figure 10B). Trips ending at these stations during this time represented 6.13% of all trips in the dataset.
+
+During the evening rush hour (5 PM) on weekdays, the ten busiest starting stations in descending order were Townsend at 7th (ID: 65),  San Francisco Caltrain (Townsend at 4th) (ID: 70), 2nd at Townsend (ID: 61), Market at Sansome (ID: 77), 2nd at South Park (ID: 64),  Embarcadero at Sansome (ID: 60),  Steuart at Market (ID: 74),   San Francisco Caltrain 2 (330 Townsend) (ID: 69), and Embarcadero at Folsom (ID: 51), Commercial at Montgomery (ID: 45) (Figure 11A). Trips starting during this time at these stations represented 5.00% of all trips in the dataset.
+
+During the evening rush hour (5 PM) on weekdays, the ten busiest ending stations in descending order were San Francisco Caltrain (Townsend at 4th) (ID: 70), San Francisco Clatrain 2 (330 Townsend) (ID: 69),  Harry Bridges Plaza (Ferry Building) (ID: 50),  Temporary Transbay Terminal (Howard at Beale) (ID: 55), Steuart at Market (ID: 74), Market at Sansome (ID: 77),  Powell Street BART (ID: 39), 2nd at Townsend (ID: 61), Civic Center BART (7th at Market) (ID: 72), and Townsend at 7th (ID: 65) (Figure 11B). Trips ending during this period at these stations represented 7.37% of all trips in the dataset. 
+
+The ten busiest starting stations during the weekends in descending order were Embarcadero at Sansome (ID: 60), Harry Bridges Plaza (Ferry Building) (ID: 50), Market at 4th (ID: 76), 2nd at Townsend (ID: 61), Embercadero at BART ID (ID: 54), Powell Street BART (ID: 39), San Francisco Caltrain (Townsend at 4th) (ID: 70), multiple stations identified by ID: 73, San Francisco Clatrain 2 (330 Townsend) (ID: 69), and Townsend at 7th (ID: 65) (Figure 12A). Trips starting on the weekend at these stations represented 4.28% of all trips in the dataset.
+
+The ten busiest ending stations during the weekends in descending order were  Harry Bridges Plaza (Ferry Building) (ID: 50), Embarcadero at Sansome (ID: 60), Market at 4th (ID: 76), Powell Street BART (ID: 39), San Francisco Caltrain (Townsend at 4th) (ID: 70), 2nd at Townsend (ID: 61),  Embercadero at BART ID (ID: 54),  Steuart at Market (ID: 74), Townsend at 7th (ID: 65),  Market at Sansome (ID: 77) (Figure 12B). Trips starting on the weekend at these stations represented 4.49% of all trips in the dataset.	
+
+![**Figure 10.** Barplots of ten busiest starting (A) and ending (B) stations during the morning rush hour.](TenBusiestMorning.png)
+![**Figure 11.** Barplots of ten busiest starting (A) and ending (B) stations during the evening rush hour.](TenBusiestEvening.png)
+![**Figure 12.** Barplots of ten busiest starting (A) and ending (B) stations during the morning rush hour.](TenBusiestWeekend.png)
+## Average Utilization of Bikes for Each Month
+
+The average utilization of bikes for each month was calculated in respect to the start date, average duration per month, and the total time in each month (Table 1). The total duration for each month was summed and the total duration for each specific month was determined in order to perform the analysis.  
