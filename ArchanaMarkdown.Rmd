@@ -329,3 +329,11 @@ The ten busiest ending stations during the weekends in descending order were  Ha
 ## Average Utilization of Bikes for Each Month
 
 The average utilization of bikes for each month was calculated in respect to the start date, average duration per month, and the total time in each month (Table 1). The total duration for each month was summed and the total duration for each specific month was determined in order to perform the analysis.  
+
+![**Table 1.** Calculated monthly average utilization in percentage from the trip dataset for the year of 2014.](Table.png)
+
+## Correlation between Different Weather Metrics and Trip Duration
+
+The weather metrics most closely correlated to trip duration were mean wind speed (r = 0.0279), maximum gust speed (r = 0.0164), and precipitation (r = -0.0156) (Figure 11). There was no discernible relationship between weather events and the number of trips as the number of trips per each weather event resembles the proportion of days for each weather event. Important correlations to consider are listed below. Maximum temperature and cloud cover had the strongest negative correlation between weather metrics that measure different characteristics of weather (temperature, visibility, wind speed, precipitation, cloudiness) (r = -0.4936) (Figure 13). Mean wind speed and minimum temperature had the strongest correlation between weather metrics that measure different characteristics of weather (r = 0.5250) (Figure 13).
+
+![**Figure 13.** Matrix of correlations between different weather metrics captured across different dates and cities within the weather dataset and duration of trips for the same date and location from the trips dataset.](MatrixofCorrelation.png)
