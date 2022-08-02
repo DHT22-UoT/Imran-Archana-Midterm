@@ -329,3 +329,17 @@ The ten busiest ending stations during the weekends in descending order were  Ha
 ## Average Utilization of Bikes for Each Month
 
 The average utilization of bikes for each month was calculated in respect to the start date, average duration per month, and the total time in each month (Table 1). The total duration for each month was summed and the total duration for each specific month was determined in order to perform the analysis.  
+
+
+Overall, this report looks very nice! And all of the code looks good. However, 
+you forgot to put all of the code in code chunks, so it does not run. Make sure
+you put all of your code in code chunks which can be done by copying and pasting
+or by typing "command, option, I" on mac. Code chunk: 
+```{r}
+# this is a code chunk
+```
+
+
+
+
+
